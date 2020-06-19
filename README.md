@@ -4,6 +4,7 @@ Learning from the book "Beginning Node.js, Express, & MongoDB Development" By Gr
 
 ---------------------
 Chapter 1: Introduction
+
 Chapter 2: Introduction to npm & Express
 Chapter 3: Beginning our Blog Project
 Chapter 4: Templating Engines
