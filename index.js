@@ -1,26 +1,24 @@
-// Import http package from node js
-const http = require('http');
 
-// Import fs package, and store html in variables
-const fs = require('fs');
-const homePage = fs.readFileSync('index.html');
-const aboutPage = fs.readFileSync('about.html');
-const contactPage = fs.readFileSync('contact.html');
-const notFoundPage = fs.readFileSync('notFound.html');
+// Import modules
+var express = require('express');   // require express module
+const path = require('path');       // path helps us get the specific path to this file, because res.sendFile(path) needs a path
 
-// Create and start simple server
-const server = http.createServer((req, res) => {
-    if(req.url === '/') 
-        res.end(homePage);
-    else if(req.url === '/about')
-        res.end(aboutPage);
-    else if(req.url === '/contact')
-        res.end(contactPage);
-    else {
-        res.writeHead(404);
-        res.end(notFoundPage);
-    }
+var app = express();                // calls express functrion to start new Express app
+app.use(express.static('public'));
+
+app.listen(3000, () => {
+    console.log("App is listening on port 3000...");
 });
 
-// Listen at port 4000
-server.listen(4000);
+app.get('/', (req,res)=> {
+    res.sendFile(path.resolve(__dirname, 'index.html'));
+})
+
+app.get('/about', (req,res)=> {
+    res.sendFile(path.resolve(__dirname, 'about.html'));
+})
+
+app.get('/contact', (req,res)=> {
+    res.sendFile(path.resolve(__dirname, 'contact.html'));
+})
+
