@@ -1,7 +1,16 @@
 const express = require('express');
 const path = require('path');
 const ejs = require('ejs');
-const { appendFileSync } = require('fs');
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/my_database', {useNewUrlParser: True});
+
+// Test connection
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function(){
+    console.log('successfully connected to database');
+});
 
 const app = new express();
 
