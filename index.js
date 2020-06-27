@@ -3,7 +3,7 @@ const path = require('path');
 const ejs = require('ejs');
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/my_database', {useNewUrlParser: True});
+mongoose.connect('mongodb://localhost/my_database', {useNewUrlParser: true});
 
 // Test connection
 const db = mongoose.connection;
@@ -40,4 +40,4 @@ app.get('/contact', (req,res)=>{
 
 app.get('/post', (req,res)=>{
     res.render('post');
-});
+})
