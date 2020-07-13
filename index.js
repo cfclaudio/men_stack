@@ -5,7 +5,8 @@ const app = new express();
 const ejs = require('ejs');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const BlogPost = require('./models/BlogPost')
+const BlogPost = require('./models/BlogPost');
+const fileUpload = require('express-fileUpload');
 
 
 mongoose.connect('mongodb://localhost/my_database', {useNewUrlParser: true});
@@ -21,6 +22,7 @@ db.once('open', function(){
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
+app.use(fileUpload());
 
 // Tell Express to use EJS as our templating engine,
 // and that any file ending in .ejs should be rendered with the EJS package
@@ -60,15 +62,16 @@ app.get('/posts/new', (req,res)=>{
 
 app.get('/posts/search', (req,res)=>{
     console.log('searching...');
-
-    // BlogPost.find({
-    //     title: req.body.search_input
-    // }, (error, blogspot)=>{
-    //     console.log(error, blogspot)
-    // })
 })
 
-app.post('/posts/store', async (req,res)=>{
-    await BlogPost.create(req.body);
-    res.redirect('/');
+app.post('/posts/store', (req,res)=>{
+    let image = req.files.image;
+    image.mv(path.resolve(__dirname, 'public/img', image.name),
+        async (error)=>{
+            await BlogPost.create({
+            ...req.body,
+            image: '/img/' + image.name
+        })
+        res.redirect('/');
+    });
 })
