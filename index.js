@@ -7,6 +7,15 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const BlogPost = require('./models/BlogPost');
 const fileUpload = require('express-fileUpload');
+const { copyFile } = require('fs');
+
+const validateMiddleWare = (req,res,next)=> {
+    if(req.files == null || req.body.title == null || req.body.titl == null) {
+        return res.redirect('/posts/new'); // redirect to form page
+    }
+    next()
+}
+
 
 
 mongoose.connect('mongodb://localhost/my_database', {useNewUrlParser: true});
@@ -30,6 +39,8 @@ app.set('view engine', 'ejs');
 
 // Register a public folder for static files
 app.use(express.static('public'));
+
+app.use('/posts/store', validateMiddleWare);
 
 app.listen(4000, ()=>{
     console.log('App is listening on port 4000...');
