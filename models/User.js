@@ -3,8 +3,15 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 
 const UserSchema = new Schema({
-    username: String,
-    password: String
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true
+    }
 });
 
 // .pre() will tell Mongoose that before we save any record into the Users schema or Users collection,
