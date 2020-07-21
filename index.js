@@ -15,6 +15,7 @@ const newUserController = require('./controllers/newUser');
 const storeUserController = require('./controllers/storeUser');
 const loginController = require('./controllers/login');
 const loginUserController = require('./controllers/loginUser');
+const expressSession = require('express-session');
 
 mongoose.connect('mongodb://localhost/my_database', {useNewUrlParser: true});
 const db = mongoose.connection;
@@ -29,6 +30,9 @@ app.use(fileUpload());
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use('/posts/store', validateMiddleWare);
+app.use(expressSession({
+    secret: 'keyboard cat'
+}))
 
 app.listen(4000, ()=>{
     console.log('App is listening on port 4000...');
