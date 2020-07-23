@@ -10,12 +10,13 @@ const newPostController = require('./controllers/newPost');
 const homeController = require('./controllers/home');
 const storePostController = require('./controllers/storePost');
 const getPostController = require('./controllers/getPost');
-const searchController = require('./controllers/search');
 const newUserController = require('./controllers/newUser');
 const storeUserController = require('./controllers/storeUser');
 const loginController = require('./controllers/login');
 const loginUserController = require('./controllers/loginUser');
 const expressSession = require('express-session');
+const authMiddleware = require('./middleware/authMiddleware');
+const redirectIfAuthenticatedMiddleware = require('./middleware/redirectIfAuthenticatedMiddleware');
 
 mongoose.connect('mongodb://localhost/my_database', {useNewUrlParser: true});
 const db = mongoose.connection;
@@ -42,12 +43,11 @@ app.listen(4000, ()=>{
 app.get('/', homeController);
 
 app.get('/post/:id', getPostController);
-app.get('/posts/new', newPostController);
-app.get('/posts/search', searchController);
-app.post('/posts/store', storePostController);
+app.get('/posts/new', authMiddleware, newPostController);
+app.post('/posts/store', authMiddleware, storePostController);
 
-app.get('/auth/register', newUserController);
-app.post('/users/register', storeUserController);
+app.get('/auth/register', redirectIfAuthenticatedMiddleware, newUserController);
+app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserController);
 
-app.get('/auth/login', loginController);
-app.post('/users/login', loginUserController);
+app.get('/auth/login', redirectIfAuthenticatedMiddleware, loginController);
+app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);
