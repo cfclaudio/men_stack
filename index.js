@@ -17,6 +17,9 @@ const loginUserController = require('./controllers/loginUser');
 const expressSession = require('express-session');
 const authMiddleware = require('./middleware/authMiddleware');
 const redirectIfAuthenticatedMiddleware = require('./middleware/redirectIfAuthenticatedMiddleware');
+const logoutController = require('./controllers/logout');
+
+global.loggedIn = null;
 
 mongoose.connect('mongodb://localhost/my_database', {useNewUrlParser: true});
 const db = mongoose.connection;
@@ -35,6 +38,12 @@ app.use(expressSession({
     secret: 'keyboard cat'
 }))
 
+app.use("*", (req,res,next)=>{
+    loggedIn = req.session.userId;
+    next()
+});
+
+
 app.listen(4000, ()=>{
     console.log('App is listening on port 4000...');
 })
@@ -51,3 +60,6 @@ app.post('/users/register', redirectIfAuthenticatedMiddleware, storeUserControll
 
 app.get('/auth/login', redirectIfAuthenticatedMiddleware, loginController);
 app.post('/users/login', redirectIfAuthenticatedMiddleware, loginUserController);
+
+app.get('/auth/logout', logoutController);
+app.use((req,res)=> res.render('notfound'));

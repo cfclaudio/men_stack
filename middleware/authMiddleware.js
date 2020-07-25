@@ -1,11 +1,11 @@
 const User = require('../models/User');
 
 module.exports=(req,res,next)=>{
+    console.log("authMiddleware called");
     User.findById(req.session.userId, (error,user)=>{
-        if(error || !user) {
-            console.log(error)
+        if(error || !user) {     
             return res.redirect('/')
         }
-        next()
+        next()                         
     })
 }
